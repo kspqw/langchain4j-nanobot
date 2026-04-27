@@ -1,0 +1,22 @@
+java.lang.SecurityException: Invalid signature file digest for Manifest main attributes
+	at sun.security.util.SignatureFileVerifier.processImpl(Unknown Source)
+	at sun.security.util.SignatureFileVerifier.process(Unknown Source)
+	at java.util.jar.JarVerifier.processEntry(Unknown Source)
+	at java.util.jar.JarVerifier.update(Unknown Source)
+	at java.util.jar.JarFile.initializeVerifier(Unknown Source)
+	at java.util.jar.JarFile.getInputStream(Unknown Source)
+	at sun.misc.URLClassPath$JarLoader$2.getInputStream(Unknown Source)
+	at sun.misc.Resource.cachedInputStream(Unknown Source)
+	at sun.misc.Resource.getByteBuffer(Unknown Source)
+	at java.net.URLClassLoader.defineClass(Unknown Source)
+	at java.net.URLClassLoader.access$100(Unknown Source)
+	at java.net.URLClassLoader$1.run(Unknown Source)
+	at java.net.URLClassLoader$1.run(Unknown Source)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(Unknown Source)
+	at java.lang.ClassLoader.loadClass(Unknown Source)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Unknown Source)
+	at java.lang.ClassLoader.loadClass(Unknown Source)
+	at sun.launcher.LauncherHelper.checkAndLoadMain(Unknown Source)
+Error: A JNI error has occurred, please check your installation and try again
+Exception in thread "main" 
