@@ -37,9 +37,12 @@ D:\originate-project\langchain4j-nanobot\src\main\java\com\nanobot\providers\Cha
 D:\originate-project\langchain4j-nanobot\src\main\java\com\nanobot\providers\ProviderRegistry.java
 D:\originate-project\langchain4j-nanobot\src\main\java\com\nanobot\providers\ProviderSpec.java
 D:\originate-project\langchain4j-nanobot\src\main\java\com\nanobot\session\Session.java
+D:\originate-project\langchain4j-nanobot\src\main\java\com\nanobot\tools\CodeRunner.java
 D:\originate-project\langchain4j-nanobot\src\main\java\com\nanobot\tools\CronTool.java
 D:\originate-project\langchain4j-nanobot\src\main\java\com\nanobot\tools\FileTool.java
 D:\originate-project\langchain4j-nanobot\src\main\java\com\nanobot\tools\MessageTool.java
+D:\originate-project\langchain4j-nanobot\src\main\java\com\nanobot\tools\QuickTest.java
 D:\originate-project\langchain4j-nanobot\src\main\java\com\nanobot\tools\ShellTool.java
+D:\originate-project\langchain4j-nanobot\src\main\java\com\nanobot\tools\TestRunner.java
 D:\originate-project\langchain4j-nanobot\src\main\java\com\nanobot\tools\ToolExecutor.java
 D:\originate-project\langchain4j-nanobot\src\main\java\com\nanobot\tools\WebTool.java

@@ -95,4 +95,6 @@ public class ChatModelFactory {
         if (base != null && !base.isEmpty()) return base;
         return spec.defaultApiBase() != null && !spec.defaultApiBase().isEmpty() ? spec.defaultApiBase() : null;
     }
+
+
 }

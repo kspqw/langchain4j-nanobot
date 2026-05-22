@@ -34,6 +34,11 @@ public record AppConfig(
         return entries != null ? entries.get(providerName) : null;
     }
 
+    public Map<String, String> getExtraHeadersForProvider(String providerName) {
+        ProviderConfigEntry entry = getProviderEntry(providerName);
+        return entry != null ? entry.extraHeaders() : Map.of();
+    }
+
     public String getApiKeyForProvider(String providerName) {
         ProviderConfigEntry entry = getProviderEntry(providerName);
         return entry != null ? entry.apiKey() : "";

@@ -48,7 +48,7 @@ public class ContextBuilder {
 
     private String getIdentity() {
         String runtime = System.getProperty("os.name") + " " + System.getProperty("os.arch") + ", Java " + System.getProperty("java.version");
-        return "# nanobot\n\nYou are nanobot, a helpful AI assistant.\n\n## Runtime\n" + runtime + "\n\n## Workspace\nYour workspace is at: " + workspace + "\n- Long-term memory: " + workspace + "/memory/MEMORY.md\n- History log: " + workspace + "/memory/HISTORY.md\n- Custom skills: " + workspace + "/skills/{skill-name}/SKILL.md\n\n## nanobot Guidelines\n- State intent before tool calls, but NEVER predict results before receiving them.\n- Before modifying a file, read it first.\n- If a tool call fails, analyze the error before retrying.\n- Ask for clarification when the request is ambiguous.\n\nReply directly with text for conversations. Only use the 'sendMessage' tool to send to a specific chat channel.";
+        return "# nanobot\n\nYou are nanobot, a helpful AI assistant.\n\n## Runtime\n" + runtime + "\n\n## Workspace\nYour workspace is at: " + workspace + "\n- Long-term memory: " + workspace + "/memory/MEMORY.md\n- History log: " + workspace + "/memory/HISTORY.md\n- Custom skills: " + workspace + "/skills/{skill-name}/SKILL.md\n\n## nanobot Guidelines\n- State intent before tool calls, but NEVER predict results before receiving them.\n- Before modifying a file, read it first.\n- If a tool call fails, analyze the error before retrying.\n- Ask for clarification when the request is ambiguous.\n\nReply directly with text for conversations. Only use the 'send_message' tool to send to a specific chat channel.";
     }
 
     private String loadBootstrapFiles() {
@@ -86,7 +86,10 @@ public class ContextBuilder {
         List<ChatMessage> messages = new ArrayList<>();
         messages.add(SystemMessage.from(systemPrompt));
 
-        for (Map<String, Object> m : history) {
+        // 智能压缩：如果历史消息过多，进行裁剪
+        List<Map<String, Object>> condensedHistory = condenseHistory(history);
+
+        for (Map<String, Object> m : condensedHistory) {
             String role = (String) m.get("role");
             Object content = m.get("content");
             if ("user".equals(role)) {
@@ -98,5 +101,25 @@ public class ContextBuilder {
 
         messages.add(UserMessage.from(runtimeCtx + "\n\n" + currentMessage));
         return messages;
+    }
+
+    // 压缩历史消息，避免超出上下文限制
+    private List<Map<String, Object>> condenseHistory(List<Map<String, Object>> history) {
+        if (history.size() <= 20) {
+            return history;
+        }
+        // 保留最新的 20 条消息，但间隔采样
+        List<Map<String, Object>> condensed = new ArrayList<>();
+        int step = Math.max(1, history.size() / 20);
+        for (int i = 0; i < history.size(); i += step) {
+            condensed.add(history.get(i));
+        }
+        // 确保最后几条消息被保留
+        for (int i = Math.max(0, history.size() - 5); i < history.size(); i++) {
+            if (!condensed.contains(history.get(i))) {
+                condensed.add(history.get(i));
+            }
+        }
+        return condensed;
     }
 }

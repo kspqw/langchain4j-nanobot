@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mvn dependency:tree)",
+      "Bash(mvn compile *)",
+      "Bash(mvn package *)",
+      "Bash(mvn clean *)",
+      "Bash(mvn exec:java -Dexec.mainClass=com.nanobot.NanobotApplication -q)",
+      "Bash(mvn -v)",
+      "Bash(java *)",
+      "Bash(cd /d D:/originate-project/langchain4j-nanobot)",
+      "Bash(javac -version)",
+      "Bash(dir *)",
+      "Bash(powershell *)",
+      "Bash(mvn exec:java -Dexec.mainClass=\"com.nanobot.tools.ToolExecutorTest\")",
+      "WebSearch",
+      "Bash(mvn exec:java -Dexec.mainClass=\"com.nanobot.NanobotApplication\" -q)",
+      "Bash(timeout 15 mvn exec:java -Dexec.mainClass=\"com.nanobot.NanobotApplication\")",
+      "Bash(pkill -f NanobotApplication)",
+      "Bash(bash *)",
+      "Bash(cmd.exe /c \"cd /d D:\\\\originate-project\\\\langchain4j-nanobot && java -cp target\\\\classes;target\\\\dependency\\\\* com.nanobot.NanobotApplication\")",
+      "Bash(cmd /c \"mvn clean compile -e\")",
+      "Bash(cmd /c \"mvn --version\")",
+      "Bash(where mvn *)",
+      "Bash(powershell.exe *)",
+      "Bash(curl -s -A \"Mozilla/5.0\" \"https://html.duckduckgo.com/html/?q=test\")",
+      "Bash(curl -h)"
+    ]
+  }
+}

@@ -36,7 +36,9 @@ com\nanobot\config\MochatChannelConfig.class
 com\nanobot\channels\MatrixChannel.class
 com\nanobot\tools\ShellTool.class
 com\nanobot\config\ExecToolConfig.class
+com\nanobot\tools\CodeRunner.class
 com\nanobot\channels\EmailChannel.class
+com\nanobot\tools\QuickTest.class
 com\nanobot\config\GatewayConfig.class
 com\nanobot\tools\ToolExecutor.class
 com\nanobot\providers\ChatModelFactory.class
@@ -46,6 +48,7 @@ com\nanobot\channels\BaseChannel.class
 com\nanobot\providers\ProviderRegistry.class
 com\nanobot\config\DiscordChannelConfig.class
 com\nanobot\config\WebToolsConfig.class
+com\nanobot\tools\TestRunner.class
 com\nanobot\channels\ChannelManager.class
 com\nanobot\config\AgentsConfig.class
 com\nanobot\bus\MessageBus.class

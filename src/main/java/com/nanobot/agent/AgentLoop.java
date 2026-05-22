@@ -6,9 +6,10 @@ import com.nanobot.bus.*;
 import com.nanobot.config.AppConfig;
 import com.nanobot.session.Session;
 import com.nanobot.tools.*;
-import dev.langchain4j.agent.tool.ToolExecutionRequest;
+import dev.langchain4j.agent.tool.*;
 import dev.langchain4j.data.message.*;
 import dev.langchain4j.model.chat.ChatModel;
+import dev.langchain4j.model.chat.request.ChatRequest;
 import dev.langchain4j.model.chat.response.ChatResponse;
 import org.slf4j.*;
 import java.nio.file.*;
@@ -38,8 +39,7 @@ public class AgentLoop {
         this.model = model;
         this.config = config;
 
-        // 直接使用 AppConfig 暴露的值，不再访问内部 record
-        this.workspace = Path.of(config.getWorkspace()).toAbsolutePath();
+        this.workspace = expandTilde(config.getWorkspace());
         this.maxIterations = config.getMaxToolIterations();
         this.temperature = config.getTemperature();
         this.maxTokens = config.getMaxTokens();
@@ -131,21 +131,43 @@ public class AgentLoop {
     private String runAgentLoop(List<ChatMessage> messages) {
         for (int i = 0; i < maxIterations; i++) {
             logger.info("Iteration {}", i + 1);
-            ChatResponse chatResponse = model.chat(messages);
+
+            ChatRequest request = ChatRequest.builder()
+                    .messages(messages)
+                    .toolSpecifications(tools.getToolSpecifications())
+                    .build();
+
+            ChatResponse chatResponse = model.chat(request);
             AiMessage aiMsg = chatResponse.aiMessage();
 
-            // ===== 修复点 3: LangChain4j 1.0 API - hasToolExecutionRequests() =====
-            // 旧版: aiMsg.hasToolExecutions()
-            // 新版: aiMsg.hasToolExecutionRequests()
             if (aiMsg.hasToolExecutionRequests()) {
                 for (ToolExecutionRequest req : aiMsg.toolExecutionRequests()) {
                     logger.info("Tool call: {} args: {}", req.name(), req.arguments());
-                    String result = tools.execute(req.name(), req.arguments());
+
+                    // 工具调用失败重试（最多2次）
+                    String result = null;
+                    for (int retry = 0; retry < 2; retry++) {
+                        result = tools.execute(req.name(), req.arguments());
+                        if (!result.startsWith("Error executing") && !result.contains("not found")) {
+                            break;
+                        }
+                        if (retry < 1) {
+                            logger.info("Retrying tool {} (attempt {})", req.name(), retry + 2);
+                        }
+                    }
+
                     logger.info("Tool result: {}", result);
+                    // 增加工具执行成功的日志
+                    if (result.contains("success") || result.contains("Error")) {
+                        logger.info("Tool {} -> {}", req.name(), result.contains("success") ? "SUCCESS" : "FAILED");
+                    }
+                    // 防止空结果导致错误
+                    if (result == null || result.isEmpty()) {
+                        result = "(command executed with no output)";
+                    }
                     if (result.length() > TOOL_RESULT_MAX_CHARS) {
                         result = result.substring(0, TOOL_RESULT_MAX_CHARS) + "\n... (truncated)";
                     }
-                    // ===== 修复点 4: 工具结果消息的正确构造方式 =====
                     messages.add(aiMsg);
                     messages.add(ToolExecutionResultMessage.from(req, result));
                 }
@@ -179,5 +201,19 @@ public class AgentLoop {
         session.clear();
         sessions.save(session);
         sendResponse(msg, "New session started.");
+    }
+
+    // 展开 ~ 为用户主目录
+    private static Path expandTilde(String path) {
+        if (path == null || path.isEmpty()) {
+            return Path.of(System.getProperty("user.home"));
+        }
+        if (path.equals("~")) {
+            return Path.of(System.getProperty("user.home"));
+        }
+        if (path.startsWith("~/")) {
+            return Path.of(System.getProperty("user.home"), path.substring(2));
+        }
+        return Path.of(path).toAbsolutePath();
     }
 }
