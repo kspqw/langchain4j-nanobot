@@ -2,6 +2,8 @@ package com.nanobot.tools;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import dev.langchain4j.agent.tool.ToolSpecification;
@@ -37,7 +39,7 @@ public class ToolExecutorTest {
     }
 
     @Test
-    public void testExecuteWriteFile() {
+    public void testExecuteWriteFile() throws IOException {
         ToolExecutor executor = new ToolExecutor(null, Path.of("target/test-output"), false);
 
         // Test writing a file
@@ -57,7 +59,7 @@ public class ToolExecutorTest {
     }
 
     @Test
-    public void testExecuteReadFile() {
+    public void testExecuteReadFile() throws IOException {
         // First create a test file
         java.nio.file.Path testFile = Path.of("target/test-output/read-test.txt");
         java.nio.file.Files.createDirectories(testFile.getParent());
@@ -73,7 +75,7 @@ public class ToolExecutorTest {
     }
 
     @Test
-    public void testExecuteListDir() {
+    public void testExecuteListDir() throws IOException {
         java.nio.file.Files.createDirectories(Path.of("target/test-output/list-test"));
         java.nio.file.Files.writeString(Path.of("target/test-output/list-test/file1.txt"), "content1");
         java.nio.file.Files.writeString(Path.of("target/test-output/list-test/file2.txt"), "content2");
@@ -89,7 +91,7 @@ public class ToolExecutorTest {
     }
 
     @Test
-    public void testExecuteEditFile() {
+    public void testExecuteEditFile() throws IOException {
         // First create a test file
         java.nio.file.Path testFile = Path.of("target/test-output/edit-test.txt");
         java.nio.file.Files.writeString(testFile, "Hello World");
